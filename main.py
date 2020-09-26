@@ -59,20 +59,52 @@ def nullable(r) -> bool:
     raise NotImplementedError
 
 
+def smart_seq(p, q):
+    if p.type == 'Empty' or q.type == 'Empty':
+        return Empty()
+    if p.type == 'Epsilon':
+        return q
+    if q.type == 'Epsilon':
+        return p
+    return Seq(p, q)
+
+
+def smart_alt(p, q):
+    if p.type == 'Empty':
+        return q
+    if q.type == 'Empty':
+        return p
+    if q.type == 'Epsilon':
+        return p if nullable(p) else Alt(Epsilon(), p)
+    if p.type == 'Epsilon':
+        return q if nullable(q) else Alt(Epsilon(), q)
+    if p == q:
+        return p
+    return Alt(p, q)
+
+
+def smart_star(r):
+    if r.type == 'Empty' or r.type == 'Epsilon':
+        return Epsilon()
+    if r.type == 'Star':
+        return r
+    return Star(r)
+
+
 def derivative(r, c):
     if r.type in ['Empty', 'Epsilon']:
         return Empty()
     if r.type == 'Char':
         return Epsilon() if r.char == c else Empty()
     if r.type == 'Alt':
-        return Alt(derivative(r.p, c), derivative(r.q, c))
+        return smart_alt(derivative(r.p, c), derivative(r.q, c))
     if r.type == 'Seq':
         if nullable(r.p):
-            return Alt(Seq(derivative(r.p, c), r.q), derivative(r.q, c))
+            return smart_alt(smart_seq(derivative(r.p, c), r.q), derivative(r.q, c))
         else:
-            return Seq(derivative(r.p, c), r.q)
+            return smart_seq(derivative(r.p, c), r.q)
     if r.type == 'Star':
-        return Seq(derivative(r.r, c), r)
+        return smart_seq(derivative(r.r, c), r)
     raise NotImplementedError
 
 
@@ -122,15 +154,15 @@ def parse_regexp(s: str) -> Regexp:
     if type_str == 'Alt':
         if len(args) != 2:
             raise RuntimeError
-        return Alt(parse_regexp(args[0]), parse_regexp(args[1]))
+        return smart_alt(parse_regexp(args[0]), parse_regexp(args[1]))
     if type_str == 'Seq':
         if len(args) != 2:
             raise RuntimeError
-        return Seq(parse_regexp(args[0]), parse_regexp(args[1]))
+        return smart_seq(parse_regexp(args[0]), parse_regexp(args[1]))
     if type_str == 'Star':
         if len(args) != 1:
             raise RuntimeError
-        return Star(parse_regexp(args[0]))
+        return smart_star(parse_regexp(args[0]))
     raise NotImplementedError
 
 

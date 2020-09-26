@@ -12,13 +12,13 @@ def compare_time(sr1, r1, sr2, r2, s):
 
 
 def main():
-    compare_time('a*', Star(Char('a')),
-                 '(a|a*)*', Star(Alt(Char('a'), Star(Char('a')))),
-                 'a' * 16)
+    compare_time('aa*', smart_seq(Char('a'), smart_star(Char('a'))),
+                 '(a*)a(a*)', smart_seq(smart_seq(smart_star(Char('a')), Char('a')), smart_star(Char('a'))),
+                 'a' * 500)
     print('')
-    compare_time('aa*', Seq(Char('a'), Star(Char('a'))),
-                 '(a*)a(a*)', Seq(Seq(Star(Char('a')), Char('a')), Star(Char('a'))),
-                 'a' * 100)
+    compare_time('a*', smart_star(Char('a')),
+                 '(a|a*)*', smart_star(smart_alt(Char('a'), smart_star(Char('a')))),
+                 'a' * 18)
 
 
 if __name__ == "__main__":
