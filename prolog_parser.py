@@ -34,31 +34,29 @@ def p_atom_id(p):
     p[0] = 'atom (' + p[1] + ')'
 
 
-def p_atom_seqatoms(p):
-    'atom : id seqatoms'
+def p_atom_atombody(p):
+    'atom : id atombody'
     p[0] = 'atom (' + p[1] + ') ' + p[2]
 
 
-def p_seqatoms_id(p):
-    'seqatoms : id'
-    p[0] = '(atom (' + p[1] + '))'
+def p_atombody_atomitem(p):
+    'atombody : atomitem'
+    p[0] = '(' + p[1] + ')'
 
 
-def p_seqatoms(p):
-    'seqatoms : id seqatoms'
-    p[0] = '(atom (' + p[1] + ') ' + p[2] + ')'
+def p_atombody(p):
+    'atombody : atomitem atombody'
+    p[0] = '(' + p[1] + ') ' + p[2]
 
 
-def p_seqatoms_br(p):
-    'seqatoms : LBR seqatoms RBR'
+def p_atomitem_br(p):
+    'atomitem : LBR atomitem RBR'
     p[0] = p[2]
 
 
-def p_seqatoms_br_seqatoms(p):
-    'seqatoms : LBR seqatoms RBR seqatoms'
-    p[0] = p[2] + ' ' + p[4]
-
-
+def p_atomparens_atom(p):
+    'atomitem : atom'
+    p[0] = p[1]
 
 def p_body(p):
     'body : dij'

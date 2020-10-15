@@ -10,6 +10,7 @@ class TestParser(unittest.TestCase):
     def test_atom(self):
         self.assertEqual('program (expression (atom (ID a) (atom (ID b))) DOT)', parse('a (b).'))
         self.assertEqual('program (expression (atom (ID a) (atom (ID b))) DOT)', parse('a (((b))).'))
+        self.assertEqual('program (expression (atom (ID a) (atom (ID b) (atom (ID c)))) DOT)', parse('a (((b c))).'))
         self.assertEqual('program (expression (atom (ID a) (atom (ID b) (atom (ID c) (atom (ID d))))) DOT)', parse('a (b c d).'))
         self.assertEqual('program (expression (atom (ID a) (atom (ID b) (atom (ID c))) (atom (ID d))) DOT)', parse('a (b c) d.'))
 
@@ -41,6 +42,9 @@ class TestParser(unittest.TestCase):
         self.assertRaises(RuntimeError, lambda: parse('f :- f;'))
         self.assertRaises(RuntimeError, lambda: parse(':- f'))
         self.assertRaises(RuntimeError, lambda: parse('(a).'))
+        self.assertRaises(RuntimeError, lambda: parse('a ((a) a).'))
+        self.assertRaises(RuntimeError, lambda: parse('a (((a) a)).'))
+
 
 
 if __name__ == '__main__':
