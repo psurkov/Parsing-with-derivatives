@@ -1,0 +1,38 @@
+Program
+  Module
+    moduleName
+  types
+    TypeDef
+      "typeName1"
+      Arrow
+        TAtom
+          Atom
+            "a"
+        Arrow
+          Var
+            "B"
+          Var
+            "C"
+    TypeDef
+      "typeName2"
+      Var
+        "XYZ"
+  rels
+    Relation
+      Atom
+        "a"
+      Disj
+        Conj
+          RAtom
+            Atom
+              "a"
+              Left Atom
+                "cons"
+                Right "C"
+                Right "D"
+          RAtom
+            Atom
+              "c"
+        RAtom
+          Atom
+            "d"

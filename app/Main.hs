@@ -1,7 +1,10 @@
 module Main where
 
 import System.IO
+import System.Environment
 
+import PrologParser
+import Text.Parsec
 
 -- runParser :: String -> IO ()
 -- runParser str =
@@ -9,27 +12,16 @@ import System.IO
 --     Left err -> print err
 --     Right r -> print r
 
--- parseFromFile :: FilePath -> IO ()
--- parseFromFile path = do
---   input <- readFile path
---   case parseString input of
---     Left err -> print err
---     Right r -> do
---       writeFile (path ++ ".out") (show r)
+parseFromFile :: Show a => FilePath -> Parsec String () a -> IO ()
+parseFromFile path parser = do
+  input <- readFile path
+  case parse parser "" input of
+    Left err -> print err
+    Right r -> do
+      writeFile (path ++ ".out") (show r)
 
 
 main :: IO ()
 main = do
-  putStrLn ""
-
-  -- runParser "13"
-  -- runParser "42"
-  -- runParser "007"
-  -- runParser "a"
-  -- runParser "(a+13)*42"
-  -- runParser "a+13*42"
-  -- runParser "1^2^3^4"
-  -- runParser "a+2^3*4"
-
-  -- writeFile "input.txt" "a+2^3*4"
-  -- parseFromFile "input.txt"
+  args <- getArgs
+  parseFromFile (args !! 1) prog

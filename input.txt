@@ -1,0 +1,6 @@
+		    module moduleName .          
+type typeName1  (     ( (a ->        B ->    C)   ) ).   
+                     type      typeName2              XYZ. 
+
+                     
+        a :-       a [    C     |    D     ]    ,       c    ;   d  .   

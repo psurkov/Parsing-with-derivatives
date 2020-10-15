@@ -82,18 +82,21 @@ relationBodyItem = (parens relationBody) <|> (RAtom <$> atom)
 
 relationBodyConj :: Parser RelationBody
 relationBodyConj = do
+  spaces
   l <- relationBodyItem
   maybeConj <- optionMaybe (do comma; relationBodyConj)
   return $ maybe l (Conj l) maybeConj
 
 relationBody :: Parser RelationBody
 relationBody = do
+  spaces
   l <- relationBodyConj
   maybeDisj <- optionMaybe (do semi; relationBody)
   return $ maybe l (Disj l) maybeDisj
 
 relation :: Parser Relation
 relation = do
+  spaces
   relHead <- atom
   relBody <- optionMaybe (do cork; relationBody)
   dot
@@ -115,12 +118,14 @@ typeExprItem = (Var <$> var) <|> (TAtom <$> atom) <|> (parens typeExpr)
 
 typeExpr :: Parser Type
 typeExpr = do
+  spaces
   l <- typeExprItem
   maybeArrow <- optionMaybe (do arrow; typeExpr)
   return $ maybe l (Arrow l) maybeArrow
 
 typ :: Parser TypeDef
 typ = do
+  spaces
   reserved "type"
   ind <- identifier
   expr <- typeExpr
