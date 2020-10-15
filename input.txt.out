@@ -23,13 +23,13 @@ Program
         "a"
       Disj
         Conj
-          RAtom
-            Atom
-              "a"
-              Left Atom
-                "cons"
-                Right "C"
-                Right "D"
+          Conj
+            RAtom
+              Atom
+                "a"
+            RAtom
+              Atom
+                "b"
           RAtom
             Atom
               "c"
